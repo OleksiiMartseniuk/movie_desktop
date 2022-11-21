@@ -21,6 +21,16 @@ def test_password_not_valid(password):
     assert result == massage.ERROR_PASSWORD_VALID
 
 
+def test_password_confirm_valid():
+    result = validation.password_confirm_valid('test1', 'test1')
+    assert result is None
+
+
+def test_password_confirm_valid_not_valid():
+    result = validation.password_confirm_valid('test1', 'test')
+    assert result == massage.ERROR_CONFIRM_PASSWORD
+
+
 @pytest.mark.parametrize(
     'username',
     ['test', 'MainTets', 'Joni', 'Alex']
