@@ -46,7 +46,6 @@ QTabBar::tab:selected{
    </property>
    <property name="font">
     <font>
-     <family>Archivo Medium</family>
      <pointsize>12</pointsize>
      <italic>false</italic>
      <bold>false</bold>
@@ -295,7 +294,6 @@ font: 500 10pt &quot;Archivo Medium&quot;;</string>
      </property>
      <property name="font">
       <font>
-       <family>Archivo Medium</family>
        <pointsize>12</pointsize>
        <italic>false</italic>
        <bold>false</bold>
