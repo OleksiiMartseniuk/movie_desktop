@@ -18,6 +18,15 @@ def password_valid(password: str) -> Optional[str]:
         return massage.ERROR_PASSWORD_VALID
 
 
+def password_confirm_valid(
+    password: str,
+    confirm_password: str
+) -> Optional[str]:
+    """Подтверждения пароля"""
+    if not password == confirm_password:
+        return massage.ERROR_CONFIRM_PASSWORD
+
+
 def username_valid(username: str) -> Optional[str]:
     """Валидация имя_пользователя
     -----------------------------
