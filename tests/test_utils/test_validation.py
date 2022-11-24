@@ -47,3 +47,28 @@ def test_username(username):
 def test_username_not_valid(username):
     result = validation.username_valid(username)
     assert result == massage.ERROR_USERNAME_VALID
+
+
+@pytest.mark.parametrize(
+    'username, password, password_confirm, result',
+    [
+        ('username', 'password', 'password', 0),
+        ('username', 'password', None, 0),
+        ('username', 'password', 'password', 0),
+        ('u', 'password', None, 1),
+        ('username', 'p', None, 1),
+        ('u', 'p', None, 2),
+        ('username', 'password', 'p', 1),
+        ('u', 'p', '', 3)
+    ]
+)
+def test_form_valid(
+    username,
+    password,
+    password_confirm,
+    result
+):
+    result_data = validation.form_valid(
+        username, password, password_confirm
+    )
+    assert len(result_data) == result
