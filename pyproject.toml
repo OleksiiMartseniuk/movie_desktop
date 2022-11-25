@@ -10,6 +10,7 @@ packages = [{include = "movie_desktop"}]
 python = "3.9.15"
 pyside6 = "^6.4.0.1"
 pymongo = "^4.3.3"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 
 [tool.poetry.group.dev.dependencies]
