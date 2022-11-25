@@ -132,6 +132,7 @@
 |data_join|data|
 |viewed|list[int]|
 |favorites|list[int]|
+|active|bool|
 <br>
 
 **Задачи**
