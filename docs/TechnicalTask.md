@@ -130,22 +130,9 @@
 |username| str-unique|
 |password_hash| str|
 |data_join|data|
-
+|viewed|list[int]|
+|favorites|list[int]|
 <br>
-
-|<b>Viewed</b>||
-|----|----|
-|id| int|
-|id_owner| int|
-|id_movie| int|
-
-<br>
-
-|<b>Favorites</b>||
-|----------|------|
-|id|int|
-|id_owner| int|
-|id_movie| int|
 
 **Задачи**
 
