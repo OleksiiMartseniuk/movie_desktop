@@ -9,6 +9,7 @@ packages = [{include = "movie_desktop"}]
 [tool.poetry.dependencies]
 python = "3.9.15"
 pyside6 = "^6.4.0.1"
+pymongo = "^4.3.3"
 
 
 [tool.poetry.group.dev.dependencies]
