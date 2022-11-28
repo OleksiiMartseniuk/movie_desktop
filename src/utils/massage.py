@@ -5,3 +5,7 @@ ERROR_PASSWORD_VALID = 'Пароль должен состоять только 
 ERROR_USERNAME_VALID = 'Имя пользователя состоять только  с букв латинского '\
                        'алфавиту[A-Z,a-z] длина с 4 до 20 символа'
 ERROR_CONFIRM_PASSWORD = 'Пароль не подтвержден'
+# Error auth
+ERROR_USER_EXIST = 'Пользователь с таким именем уже существует'
+ERROR_USER_NOT_EXIST = 'Пользователь не существует'
+ERROR_PASSWORD = 'Неверный пароль'
