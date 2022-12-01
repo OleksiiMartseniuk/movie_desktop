@@ -53,3 +53,27 @@ def test_registration(mock_get_user, mock_create_user):
     mock_get_user.return_value = None
     security.registration('test', 'password')
     mock_create_user.assert_called_once()
+
+
+@mock.patch('src.services.auth.security.current_user')
+@mock.patch('src.services.auth.security.user_db.get')
+def test_login(mock_get_user, mock_current_user):
+    mock_get_user.return_value = get_user()
+    security.login('test', 'password')
+    mock_current_user.assert_called_once()
+
+
+@mock.patch('src.services.auth.security.user_db.get')
+def test_login_error_password(mock_get_user):
+    mock_get_user.return_value = get_user()
+    result = security.login('test', 'password1')
+    assert isinstance(result, str)
+    assert result == massage.ERROR_PASSWORD
+
+
+@mock.patch('src.services.auth.security.user_db.get')
+def test_login_not_user_exist(mock_get_user):
+    mock_get_user.return_value = None
+    result = security.login('test', 'password')
+    assert isinstance(result, str)
+    assert result == massage.ERROR_USER_NOT_EXIST
