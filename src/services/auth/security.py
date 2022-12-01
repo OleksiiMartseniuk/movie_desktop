@@ -19,7 +19,7 @@ def get_password_hash(password) -> str:
     return pwd_context.hash(password)
 
 
-def get_current_user(user: user_db.User) -> Union[user_db.User, str]:
+def current_user(user: user_db.User) -> Union[user_db.User, str]:
     """Получить активного пользователя"""
     if user.active:
         return user
@@ -39,7 +39,7 @@ def login(username: str, password: str) -> Union[user_db.User, str]:
     user = user_db.get(username=username)
     if user:
         if verify_password(password, user.password_hash):
-            return get_current_user(user)
+            return current_user(user)
         else:
             return massage.ERROR_PASSWORD
     else:
