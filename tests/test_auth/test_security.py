@@ -1,3 +1,4 @@
+from unittest import mock
 from datetime import datetime
 
 from src.services.auth import security
@@ -36,3 +37,19 @@ def test__current_user():
     result = security.current_user(user)
     assert isinstance(result, str)
     assert result == massage.ERROR_USER_ACTION
+
+
+@mock.patch('src.services.auth.security.user_db.get')
+def test_registration_user_exist(mock_get_user):
+    mock_get_user.return_value = get_user()
+    result = security.registration('test', 'password')
+    assert isinstance(result, str)
+    assert result == massage.ERROR_USER_EXIST
+
+
+@mock.patch('src.services.auth.security.user_db.create')
+@mock.patch('src.services.auth.security.user_db.get')
+def test_registration(mock_get_user, mock_create_user):
+    mock_get_user.return_value = None
+    security.registration('test', 'password')
+    mock_create_user.assert_called_once()
