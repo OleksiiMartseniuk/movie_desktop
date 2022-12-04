@@ -15,7 +15,7 @@ class TheMovieDatabaseApi:
         language: str = 'ru-Ru',
     ) -> None:
         self.url = f'{url}{version}'
-        self.api_key = api_key
+        self.__api_key = api_key
         self.language = language
 
     def get(self, url: str, **kwargs):
@@ -31,3 +31,14 @@ class TheMovieDatabaseApi:
         except requests.exceptions.ConnectionError:
             logger.error(f'Not connect net. url [{url}]')
             return None
+
+    def __set_params(self, **kwargs) -> dict:
+        params = {
+            'api_key': self.__api_key,
+            'language': self.language,
+        }
+        if kwargs:
+            # Параметры со значением None игнорируются
+            params_add = {key: value for key, value in kwargs.items() if value}
+            params.update(params_add)
+        return params
