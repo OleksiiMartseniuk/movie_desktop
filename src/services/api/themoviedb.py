@@ -13,3 +13,15 @@ class TheMovieDatabaseApi:
         self.url = f'{url}{version}'
         self.api_key = api_key
         self.language = language
+
+    def get(self, url: str, **kwargs):
+        try:
+            response = requests.get(url=url, **kwargs)
+            if response.status_code == 200:
+                response.json()
+            else:
+                # TODO logger
+                return None
+        except requests.exceptions.ConnectionError:
+            # TODO logger
+            return None
