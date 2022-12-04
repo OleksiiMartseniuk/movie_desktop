@@ -1,4 +1,8 @@
 import requests
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class TheMovieDatabaseApi:
@@ -20,8 +24,10 @@ class TheMovieDatabaseApi:
             if response.status_code == 200:
                 response.json()
             else:
-                # TODO logger
+                logger.error(
+                    f'status code [{response.status_code}] url [{url}]'
+                )
                 return None
         except requests.exceptions.ConnectionError:
-            # TODO logger
+            logger.error(f'Not connect net. url [{url}]')
             return None
