@@ -45,6 +45,13 @@ class TheMovieDatabaseApi:
             params.update(params_add)
         return params
 
+    def _error(type: str) -> bool:
+        """Проверка параметра type"""
+        if type != 'movie' and type != 'tv':
+            logger.error('Invalid parameter [type]')
+            return True
+        return False
+
     def get_details(self, id: int, type: str) -> Optional[dict]:
         """Получить первичную информацию movie/TV
 
@@ -55,8 +62,7 @@ class TheMovieDatabaseApi:
         type : str
             ['movie', 'tv']
         """
-        if type != 'movie' and type != 'tv':
-            logger.error('Invalid parameter [type]')
+        if self._error(type=type):
             return None
 
         url = f'{self.url}/{type}/{id}'
