@@ -45,7 +45,7 @@ class TheMovieDatabaseApi:
             params.update(params_add)
         return params
 
-    def _error(type: str) -> bool:
+    def _error(self, type: str) -> bool:
         """Проверка параметра type"""
         if type != 'movie' and type != 'tv':
             logger.error('Invalid parameter [type]')
@@ -66,5 +66,21 @@ class TheMovieDatabaseApi:
             return None
 
         url = f'{self.url}/{type}/{id}'
+        params = self.__set_params()
+        return self.get(url=url, params=params)
+
+    def get_popular(self, type: str) -> dict:
+        """Получите список текущих популярных movie/tv на TMDB.
+        Этот список обновляется ежедневно
+
+        Parameters:
+        ----------
+        type : str
+            ['movie', 'tv']
+        """
+        if self._error(type=type):
+            return None
+
+        url = f'{self.url}/{type}/popular'
         params = self.__set_params()
         return self.get(url=url, params=params)
