@@ -84,3 +84,18 @@ class TheMovieDatabaseApi:
         url = f'{self.url}/{type}/popular'
         params = self.__set_params()
         return self.get(url=url, params=params)
+
+    def get_top_rated(self, type: str) -> dict:
+        """Получите movie/tv с самым высоким рейтингом на TMDB.
+
+        Parameters:
+        ----------
+        type : str
+            ['movie', 'tv']
+        """
+        if self._error(type=type):
+            return None
+
+        url = f'{self.url}/{type}/top_rated'
+        params = self.__set_params()
+        return self.get(url=url, params=params)
