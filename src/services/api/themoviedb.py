@@ -69,7 +69,7 @@ class TheMovieDatabaseApi:
         params = self.__set_params()
         return self.get(url=url, params=params)
 
-    def get_popular(self, type: str) -> dict:
+    def get_popular(self, type: str, page: int = 1) -> Optional[dict]:
         """Получите список текущих популярных movie/tv на TMDB.
         Этот список обновляется ежедневно
 
@@ -82,10 +82,10 @@ class TheMovieDatabaseApi:
             return None
 
         url = f'{self.url}/{type}/popular'
-        params = self.__set_params()
+        params = self.__set_params(page=page)
         return self.get(url=url, params=params)
 
-    def get_top_rated(self, type: str) -> dict:
+    def get_top_rated(self, type: str, page: int = 1) -> Optional[dict]:
         """Получите movie/tv с самым высоким рейтингом на TMDB.
 
         Parameters:
@@ -97,5 +97,78 @@ class TheMovieDatabaseApi:
             return None
 
         url = f'{self.url}/{type}/top_rated'
+        params = self.__set_params(page=page)
+        return self.get(url=url, params=params)
+
+    def get_recommendations(
+        self,
+        id: int,
+        type: str,
+        page: int = 1
+    ) -> Optional[dict]:
+        """Получить список рекомендуемых movie/tv для movie/tv.
+
+        Parameters:
+        ----------
+        type : str
+            ['movie', 'tv']
+        """
+        if self._error(type=type):
+            return None
+
+        url = f'{self.url}/{type}/{id}/recommendations'
+        params = self.__set_params(page=page)
+        return self.get(url=url, params=params)
+
+    def get_trending(
+        self,
+        media_type: str,
+        time_window: str,
+        page: int = 1
+    ) -> Optional[dict]:
+        """Получите ежедневные или еженедельные трендовые товары.
+
+        Parameters:
+        ----------
+        media_type : str
+            >>> [all] Включите все фильмы, телешоу и людей в результаты в
+                виде глобального списка трендов.
+            >>> [movie] Показать популярные фильмы в результатах.
+            >>> [tv] Показать популярные телешоу в результатах.
+            >>> [person] Покажите популярных людей в результатах.
+        time_window : str
+            >>> [day] Просмотрите список трендов дня.
+            >>> [week] Просмотрите список трендов на неделю.
+        """
+        list_media_type = ['all', 'movie', 'tv', 'person']
+        list_time_window = ['day', 'week']
+
+        if media_type not in list_media_type:
+            logger.error('Invalid parameter [media_type]')
+            return None
+
+        if time_window not in list_time_window:
+            logger.error('Invalid parameter [time_window]')
+            return None
+
+        url = f'{self.url}/trending/{media_type}/{time_window}'
+        params = self.__set_params(page=page)
+        return self.get(url=url, params=params)
+
+    def get_person_details(self, id: int) -> Optional[dict]:
+        """Получить данные основного лица по идентификатору."""
+        url = f'{self.url}/person/{id}'
         params = self.__set_params()
+        return self.get(url=url, params=params)
+
+    def get_person_popular(self, page: int = 1) -> Optional[dict]:
+        """Получить список популярных людей на TMDB"""
+        url = f'{self.url}/person/popular'
+        params = self.__set_params(page=page)
+        return self.get(url=url, params=params)
+
+    def search_multi(self, query: str, page: int = 1) -> Optional[dict]:
+        """Поиск нескольких моделей в одном запросе."""
+        url = f'{self.url}/search/multi'
+        params = self.__set_params(query=query, page=page)
         return self.get(url=url, params=params)
