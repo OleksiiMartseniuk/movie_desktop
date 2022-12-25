@@ -1,5 +1,7 @@
 import logging
 
+from typing import Optional
+
 from PySide6.QtWidgets import QWidget
 
 from src.services.db import user as user_db
@@ -20,16 +22,27 @@ class Form(QWidget):
         # id пользователя
         self.user_id = user_id
         # Добавить сигнал кнопки
+        # Переход на редактирования профиля
         self.ui.button_user.clicked.connect(self.profile_user)
 
     def show(self) -> None:
-        user = user_db.get_id(self.user_id)
+        user = self.get_user()
         if not user:
-            logger.error(f'Not user id[{self.user_id}] in database')
-            return
+            self.close()
         self.ui.button_user.setText(user.username.capitalize())
 
         super().show()
 
     def profile_user(self) -> None:
+        """Профиль пользователя"""
+        user = self.get_user()
+
         self.ui.stackedWidget.setCurrentWidget(self.ui.profile)
+        self.ui.lineEdit_username.setText(user.username)
+
+    def get_user(self) -> Optional[user_db.User]:
+        """Получения текучего пользователя"""
+        user = user_db.get_id(self.user_id)
+        if not user:
+            logger.error(f'Not user id[{self.user_id}] in database')
+        return user
