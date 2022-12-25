@@ -1,18 +1,20 @@
-from PySide6.QtWidgets import QMainWindow, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PySide6 import QtCore
 
 from src.utils import validation
 from src.services.auth import security
 
 from .ui_auth import Ui_Auth
+from .form import Form
 
 
-class Auth(QMainWindow):
+class Auth(QWidget):
     """Форма аутентификации"""
 
-    def __init__(self) -> None:
+    def __init__(self, ui_form: Form) -> None:
         super(Auth, self).__init__()
         self.ui = Ui_Auth()
+        self.ui_form = ui_form
         self.ui.setupUi(self)
         # Список сообщений о ошибке
         self.error_massage = {'sing_in': [], 'sing_up': []}
@@ -38,8 +40,9 @@ class Auth(QMainWindow):
                 self.error_massage[action].append(user)
                 self.show_massage_error(action, layout)
             else:
-                # TODO Переход на основное окно
-                print(user)
+                self.ui_form.user_id = user._id
+                self.ui_form.show()
+                self.close()
 
     def sing_up(self) -> None:
         """Регистрация"""
