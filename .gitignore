@@ -4,3 +4,4 @@ docker_dev
 .env
 .vscode
 .idea
+info.log
