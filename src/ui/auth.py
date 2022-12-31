@@ -62,7 +62,7 @@ class Auth(QWidget):
                 ui.show_massage_error(self.error_massage[action], layout)
             else:
                 # Сообщения об успехе регистрации
-                message_info = self.create_message(
+                message_info = ui.create_message(
                     f'Пользователь {username} зарегистрирован', 'green'
                 )
                 layout.addWidget(message_info)
