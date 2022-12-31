@@ -55,3 +55,8 @@ def get(**kwargs) -> Optional[User]:
     if not user:
         return None
     return User.format_dict(user)
+
+
+def update(id: str, **kwargs) -> None:
+    """Обновления пользователя"""
+    db.user.update_one({'_id': ObjectId(id)}, {'$set': kwargs})
