@@ -72,3 +72,60 @@ def test_form_valid(
         username, password, password_confirm
     )
     assert len(result_data) == result
+
+
+@pytest.mark.parametrize(
+    'new_username, new_password, confirm_password,'\
+        ' hash_password, current_username, error_len, action_r',
+    [
+        ('aadmin',  '', '', '213', 'admin', 0, ['username']),
+        (
+            '',
+            'qwerty',
+            'qwerty',
+            '$2b$12$I8b79Oi8HEnOhneBRkQ8HOEqdDp34L4lNNx9iH4HSj6K5eDdGDPpy',
+            'admin',
+            0,
+            ['password']
+        ),
+        (
+            'aadmin',
+            'qwerty',
+            'qwerty',
+            '$2b$12$I8b79Oi8HEnOhneBRkQ8HOEqdDp34L4lNNx9iH4HSj6K5eDdGDPpy',
+            'admin',
+            0,
+            ['username', 'password']
+        ),
+        (
+            '',
+            'adminadmin',
+            'adminadmin',
+            '$2b$12$I8b79Oi8HEnOhneBRkQ8HOEqdDp34L4lNNx9iH4HSj6K5eDdGDPpy',
+            'admin',
+            1,
+            ['password']
+        ),
+        ('', '', '', '213', 'admin', 1, []),
+        ('admin',  '', '', '213', 'admin', 1, ['username']),
+        ('', 'qwerty', '', '213', '', 2, [])
+    ]
+)
+def test_form_update_valid(
+    new_username,
+    new_password,
+    confirm_password,
+    hash_password,
+    current_username,
+    error_len,
+    action_r
+):
+    action, error_list = validation.form_update_valid(
+        new_username,
+        new_password,
+        confirm_password,
+        hash_password,
+        current_username
+    )
+    assert len(error_list) == error_len
+    assert action == action_r
