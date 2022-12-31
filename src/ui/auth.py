@@ -1,7 +1,7 @@
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout
 from PySide6 import QtCore
 
-from src.utils import validation
+from src.utils import validation, ui
 from src.services.auth import security
 
 from .ui_auth import Ui_Auth
@@ -38,7 +38,7 @@ class Auth(QWidget):
             user = security.login(username, password)
             if isinstance(user, str):
                 self.error_massage[action].append(user)
-                self.show_massage_error(action, layout)
+                ui.show_massage_error(self.error_massage[action], layout)
             else:
                 self.ui_form.user_id = user._id
                 self.ui_form.show()
@@ -59,7 +59,7 @@ class Auth(QWidget):
             message_error = security.registration(username, password)
             if message_error:
                 self.error_massage[action].append(message_error)
-                self.show_massage_error(action, layout)
+                ui.show_massage_error(self.error_massage[action], layout)
             else:
                 # Сообщения об успехе регистрации
                 message_info = self.create_message(
@@ -87,8 +87,7 @@ class Auth(QWidget):
         # Очистка списка ошибок
         self.error_massage[action].clear()
         # Очистка ошибок с формы
-        for i in reversed(range(layout.count())):
-            layout.itemAt(i).widget().setParent(None)
+        ui.clear_massage(layout)
 
         error_massage = validation.form_valid(
             username, password, confirm_password
@@ -98,18 +97,6 @@ class Auth(QWidget):
 
         if self.error_massage[action]:
             # Добавления ошибок в форму
-            self.show_massage_error(action, layout)
+            ui.show_massage_error(self.error_massage[action], layout)
             return False
         return True
-
-    def show_massage_error(self, action: str, layout: QVBoxLayout) -> None:
-        """Отображения ошибок в форме"""
-        for error in self.error_massage[action]:
-            layout.addWidget(self.create_message(error, 'red'))
-
-    def create_message(self, text: str, color: str) -> QLabel:
-        """Создания объекта label"""
-        label = QLabel(text)
-        label.setWordWrap(True)
-        label.setStyleSheet(f"color: {color};")
-        return label
