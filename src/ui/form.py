@@ -2,12 +2,14 @@ import logging
 
 from typing import Optional
 
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QGridLayout
 
 from src.services.db import user as user_db
 from src.services.auth import security
+from src.services.api.themoviedb import TheMovieDatabaseApi
 
-from src.utils import validation, ui
+from src.utils import validation, ui, schemas
+from src.config.settings import KEY_THEMOVIEDB
 
 from .ui_form import Ui_Form
 
@@ -22,6 +24,8 @@ class Form(QWidget):
         super(Form, self).__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        # Клиент TMB
+        self.client_tmb = TheMovieDatabaseApi(KEY_THEMOVIEDB)
         # id пользователя
         self.user_id = user_id
         # Добавить сигнал кнопки
@@ -29,13 +33,14 @@ class Form(QWidget):
         self.ui.button_user.clicked.connect(self.profile_user)
         # Обновления профиля
         self.ui.pushButton_save.clicked.connect(self.update_profile)
+        # Popular
+        self.ui.radioButton_popular.clicked.connect(self.show_movie)
 
     def show(self) -> None:
         user = self.get_user()
         if not user:
             self.close()
         self.ui.button_user.setText(user.username.capitalize())
-
         super().show()
 
     def get_user(self) -> Optional[user_db.User]:
@@ -96,3 +101,32 @@ class Form(QWidget):
                 'Обновления выполнено успешно', 'green'
             )
             layout.addWidget(message_info)
+
+    def show_movie(self):
+        self.ui.stackedWidget.setCurrentWidget(self.ui.main)
+
+        data = self.client_tmb.get_popular("movie")
+        list_preview = schemas.get_list_preview(data)
+
+        if isinstance(list_preview, str):
+            # TODO show massage error
+            return
+        layout = QGridLayout()
+
+        preview_i = iter(list_preview)
+        try:
+            for i in range(5):
+                for j in range(4):
+                    preview = next(preview_i)
+                    cart = ui.cart(
+                        preview.id,
+                        preview.title,
+                        preview.image,
+                        preview.release_date
+                    )
+                    layout.addWidget(cart, i, j)
+        except StopIteration:
+            # TODO fix matrix items
+            logger.error("Error preview items")
+
+        self.ui.scrollAreaWidgetContents.setLayout(layout)
